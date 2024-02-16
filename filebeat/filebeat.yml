@@ -1,7 +1,21 @@
 filebeat.inputs:
-- type: docker
-  containers.ids:
-    - "*"
-output.elasticsearch:
-  hosts: ["m8.vms.re:9200"]
+- type: container
+  paths: 
+    - '/var/lib/docker/containers/*/*.log'
 
+processors:
+- add_docker_metadata:
+    host: "unix:///var/run/docker.sock"
+
+- decode_json_fields:
+    fields: ["message"]
+    target: "json"
+    overwrite_keys: true
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  indices:
+    - index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+
+logging.json: true
+logging.metrics.enabled: false
