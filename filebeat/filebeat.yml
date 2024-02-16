@@ -3,5 +3,5 @@ filebeat.inputs:
   containers.ids:
     - "*"
 output.elasticsearch:
-  hosts: ["your-elasticsearch-host:9200"]
+  hosts: ["m8.vms.re:9200"]
 
